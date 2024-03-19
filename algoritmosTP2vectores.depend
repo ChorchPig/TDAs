@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1710859767 source:c:\users\lucas\onedrive\escritorio\facultad\proyectos c\algoritmostp2vectores\main.c
+	<stdio.h>
+	<locale.h>
+	"prototipos.h"
+
+1710860276 c:\users\lucas\onedrive\escritorio\facultad\proyectos c\algoritmostp2vectores\prototipos.h
+
+1710885615 source:c:\users\lucas\onedrive\escritorio\facultad\proyectos c\algoritmostp2vectores\funciones.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+	"prototipos.h"
+
