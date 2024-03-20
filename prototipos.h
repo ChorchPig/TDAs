@@ -20,6 +20,8 @@ Vector* copiarVector(Vector*);
 
 int sumaElementosVector(Vector*);
 Vector* sumarDosVectores(Vector*, Vector*);
+VECTOR_ELEMENT sumarDosElementos(VECTOR_ELEMENT, VECTOR_ELEMENT);
+VECTOR_ELEMENT restarDosElementos(VECTOR_ELEMENT, VECTOR_ELEMENT);
 
 int apareceEnVector(Vector*, VECTOR_ELEMENT);
 

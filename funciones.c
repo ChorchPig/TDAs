@@ -41,7 +41,7 @@ int vectorLleno(Vector *vector){
 }
 
 int eliminarDelVector(Vector *vector, VECTOR_ELEMENT valor){
-    int position=binary_search(valor, vector);
+    int position=sequential_search(valor, vector->arreglo, getCurrentSize(vector));
     if(position!=getCurrentSize(vector))borrarDato(vector, position);
     return position;
 }
@@ -75,14 +75,25 @@ int sumaElementosVector(Vector *vector){
 }
 
 Vector* sumarDosVectores(Vector *vector1, Vector *vector2){
-    int n=getCurrentSize(vector1);
+    int n=getCurrentSize(vector1), option=0;
     Vector *resultado=crearVector(n);
     if(getCurrentSize(vector1)!=getCurrentSize(vector2))return resultado;
+    setlocale(LC_ALL, "spanish");
+    printf("Elegí una operación:\n\t 1.Suma \n\t 2.Resta");
+    scanf("%i", &option);
     for(int i=0; i<n; i++){
-        resultado->arreglo[i]=vector1->arreglo[i]+vector2->arreglo[i];
+        if(option==1)resultado->arreglo[i]=sumarDosElementos(vector1->arreglo[i], vector2->arreglo[i]);
+        else resultado->arreglo[i]=restarDosElementos(vector1->arreglo[i], vector2->arreglo[i]);
     }
-    //Hacer que el usuario decida entre suma o resta;
     return resultado;
+}
+
+VECTOR_ELEMENT sumarDosElementos(VECTOR_ELEMENT elemento1, VECTOR_ELEMENT elemento2){
+    return elemento1+elemento2;
+}
+
+VECTOR_ELEMENT restarDosElementos(VECTOR_ELEMENT elemento1, VECTOR_ELEMENT elemento2){
+    return elemento1-elemento2;
 }
 
 int apareceEnVector(Vector *vector, VECTOR_ELEMENT valor){
