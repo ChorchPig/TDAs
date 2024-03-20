@@ -2,7 +2,7 @@
 #include <locale.h>
 #include "prototipos.h"
 
-//TO DO: añadir mezclarDosVectores(), corregir el problema en eliminarDelVector(), hacer el cambio requerido en sumarDosVectores()
+//TO DO: aÃ±adir mezclarDosVectores()
 int main(){
     setlocale(LC_ALL, "spanish");
 
