@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "prototipos.h"
+#include "prototipos/prototiposPila.h"
 
 Pila* crearPila(int cantMaxima){
     Pila *pila=(Pila*)malloc(sizeof(Pila));
@@ -11,8 +11,8 @@ Pila* crearPila(int cantMaxima){
     return pila;
 }
 
-nodo* crearNodo(NODE_ELEMENT element) {
-    nodo *new_node = (nodo*)malloc(sizeof(nodo));
+STACK_ELEMENT* crearNodoPila(NODE_ELEMENT element) {
+    STACK_ELEMENT* new_node = (STACK_ELEMENT*)malloc(sizeof(STACK_ELEMENT));
     if (new_node){
         new_node->valor=element;
         new_node->siguiente=NULL;
@@ -22,16 +22,16 @@ nodo* crearNodo(NODE_ELEMENT element) {
 
 void push(Pila *pila, NODE_ELEMENT element){
     if(pilaLlena(pila))return;
-    if(!pila->tope)pila->tope=crearNodo(element);
+    if(!pila->tope)pila->tope=crearNodoPila(element);
     else{
-        nodo *aux=crearNodo(element);
+        STACK_ELEMENT* aux=crearNodoPila(element);
         aux->siguiente=pila->tope;
         pila->tope=aux;
     }
     pila->currentSize++;
 }
 
-void pushNode(Pila *pila, STACK_ELEMENT element){
+void pushNode(Pila *pila, STACK_ELEMENT* element){
     if(pilaLlena(pila))return;
     if(!pila->tope)pila->tope=element;
     else{
@@ -41,8 +41,8 @@ void pushNode(Pila *pila, STACK_ELEMENT element){
     pila->currentSize++;
 }
 
-nodo* pop(Pila *pila){
-    nodo* nodoAEliminar = NULL;
+STACK_ELEMENT* pop(Pila *pila){
+    STACK_ELEMENT* nodoAEliminar = NULL;
     if(pila->tope){
         nodoAEliminar=pila->tope;
         pila->tope=pila->tope->siguiente;
@@ -91,7 +91,7 @@ void eliminarPila(Pila *pila){
 
 void imprimirPila(Pila *pila) {
     Pila *aux=crearPila(pila->currentSize);
-    nodo *nodoAux=NULL;
+    STACK_ELEMENT* nodoAux=NULL;
     while(!pilaVacia(pila)){
         nodoAux=pop(pila);
         printf("%d ", nodoAux->valor);
@@ -108,7 +108,7 @@ void imprimirPila(Pila *pila) {
 void invertirPila(Pila *pila){
     int longitud=getStackCurrentSize(pila);
     Pila *aux1=crearPila(longitud), *aux2=crearPila(longitud);
-    nodo *nodoAux=NULL;
+    STACK_ELEMENT* nodoAux=NULL;
     while(!pilaVacia(pila)){
         nodoAux=pop(pila);
         pushNode(aux1, nodoAux);
@@ -129,7 +129,7 @@ Pila* copiarPila(Pila *pila) {
     Pila *copiaPila=crearPila(getStackMaxSize(pila));
     int longitud=getStackCurrentSize(pila);
     NODE_ELEMENT *arreglo=(NODE_ELEMENT *)malloc(sizeof(NODE_ELEMENT)*longitud);
-    nodo *nodoAux=NULL;
+    STACK_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=pop(pila);
         arreglo[i]=nodoAux->valor;
@@ -140,21 +140,4 @@ Pila* copiarPila(Pila *pila) {
     invertirPila(pila);
     free(arreglo);
     return copiaPila;
-}
-
-NODE_ELEMENT sumarElementos(Pila *pila){
-    Pila *aux=crearPila(getStackCurrentSize(pila));
-    nodo *nodoAux=NULL;
-    NODE_ELEMENT total=0;
-    while(!pilaVacia(pila)){
-        nodoAux=pop(pila);
-        total+=nodoAux->valor;
-        pushNode(aux, nodoAux);
-    }
-    while(!pilaVacia(aux)){
-        nodoAux=pop(aux);
-        pushNode(pila, nodoAux);
-    }
-    eliminarPila(aux);
-    return total;
 }

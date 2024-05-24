@@ -1,26 +1,24 @@
-#ifndef PROTOTIPOS_H_INCLUDED
-#define PROTOTIPOS_H_INCLUDED
+#ifndef PROTOTIPOSPILA_H_INCLUDED
+#define PROTOTIPOSPILA_H_INCLUDED
 
 #define NODE_ELEMENT int
-#define STACK_ELEMENT nodo*
+#define STACK_ELEMENT nodoPila
 
-
-typedef struct _node {
+typedef struct _nodeStack{
     NODE_ELEMENT valor;
-    struct _node *siguiente;
-} nodo;
+    struct _nodeStack *siguiente;
+} nodoPila;
 
 typedef struct _stack {
-    STACK_ELEMENT tope;
+    STACK_ELEMENT* tope;
     int maxSize, currentSize;
 } Pila;
 
-//Forman parte del TDA
 Pila* crearPila(int);
 void push(Pila*,NODE_ELEMENT);
-void pushNode(Pila*,STACK_ELEMENT);
-nodo* crearNodo(NODE_ELEMENT);
-nodo* pop(Pila*);
+void pushNode(Pila*,STACK_ELEMENT*);
+STACK_ELEMENT* crearNodoPila(NODE_ELEMENT);
+STACK_ELEMENT* pop(Pila*);
 void popFree(Pila*);
 NODE_ELEMENT top(Pila*);
 int getStackMaxSize(Pila*);
@@ -29,10 +27,8 @@ int pilaLlena(Pila*);
 int pilaVacia(Pila*);
 void eliminarPila(Pila*);
 
-//No forman parte del TDA
 void imprimirPila(Pila*);
 void invertirPila(Pila*);
 Pila* copiarPila(Pila*);
-NODE_ELEMENT sumarElementos(Pila*);
 
-#endif // PROTOTIPOS_H_INCLUDED
+#endif // PROTOTIPOSPILA_H_INCLUDED

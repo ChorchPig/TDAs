@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "prototiposMatriz.h"
+#include "prototipos/prototiposMatriz.h"
 
 matrix* crearMatriz(int filas, int columnas){
     matrix *Matrix=(matrix*)malloc(sizeof(matrix));
@@ -98,4 +98,21 @@ matrix *trasponerMatriz(matrix *Matrix){
         }
     }
     return ptr;
+}
+
+matrix* ampliarMatriz(matrix *Matrix, int filas, int columnas){
+    if(!Matrix)return Matrix;
+    matrix *nuevaMatriz=crearMatriz(filas, columnas);
+    if(nuevaMatriz){
+        int filasViejas=getMatrixRows(Matrix), columnasViejas=getMatrixColumns(Matrix);
+        for(int i=0; i<filas; i++){
+            for(int j=0; j<columnas; j++){
+                if(i<filasViejas&&j<columnasViejas){
+                    setValueInMatrix(nuevaMatriz, getValueInMatrix(Matrix, i, j), i, j);
+                }
+            }
+        }
+        free(Matrix);
+    }
+    return nuevaMatriz;
 }

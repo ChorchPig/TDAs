@@ -34,7 +34,13 @@
 		<Unit filename="funciones.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="funcionesFila.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="funcionesMatriz.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funcionesPila.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funcionesVector.c">
@@ -43,9 +49,13 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="prototipos.h" />
-		<Unit filename="prototiposMatriz.h" />
-		<Unit filename="prototiposVector.h" />
+		<Unit filename="prototipos/prototipos.h">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="prototipos/prototiposFila.h" />
+		<Unit filename="prototipos/prototiposMatriz.h" />
+		<Unit filename="prototipos/prototiposPila.h" />
+		<Unit filename="prototipos/prototiposVector.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

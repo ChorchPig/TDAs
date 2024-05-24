@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "prototiposVector.h"
+#include "prototipos/prototiposVector.h"
 
 Vector* crearVector(int initialSize){
     Vector *ptr=(Vector *)malloc(sizeof(Vector));

@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "prototipos.h"
+#include "prototipos/prototiposFila.h"
 
-QUEUE_ELEMENT crearNodo(NODE_ELEMENT element) {
-    QUEUE_ELEMENT new_node = (QUEUE_ELEMENT)malloc(sizeof(nodo));
+QUEUE_ELEMENT* crearNodoFila(NODE_ELEMENT element) {
+    QUEUE_ELEMENT* new_node = (QUEUE_ELEMENT*)malloc(sizeof(QUEUE_ELEMENT));
     if (new_node){
         new_node->valor=element;
         new_node->siguiente=NULL;
@@ -22,7 +22,7 @@ Fila* crearFila(int maximo){
 
 int filaLlena(Fila *fila){
     int estaLlena=0;
-    if(!fila)return estaLlena;
+    if(!fila||fila->maxSize==-1)return estaLlena;
     if(fila->currentSize==fila->maxSize)estaLlena=1;
     return estaLlena;
 }
@@ -35,7 +35,7 @@ int filaVacia(Fila *fila){
 }
 
 void enqueue(Fila *fila, NODE_ELEMENT element) {
-    QUEUE_ELEMENT aux=crearNodo(element);
+    QUEUE_ELEMENT* aux=crearNodoFila(element);
     if(filaLlena(fila))return;
     if(fila->inicioFila){
         fila->finalFila->siguiente=aux;
@@ -48,7 +48,7 @@ void enqueue(Fila *fila, NODE_ELEMENT element) {
     fila->currentSize++;
 }
 
-void enqueueNode(Fila *fila, QUEUE_ELEMENT nuevoNodo){
+void enqueueNode(Fila *fila, QUEUE_ELEMENT* nuevoNodo){
     if(filaLlena(fila))return;
     if(fila->inicioFila){
         fila->finalFila->siguiente=nuevoNodo;
@@ -61,8 +61,8 @@ void enqueueNode(Fila *fila, QUEUE_ELEMENT nuevoNodo){
     fila->currentSize++;
 }
 
-QUEUE_ELEMENT dequeue(Fila *fila){
-    QUEUE_ELEMENT aux=fila->inicioFila;
+QUEUE_ELEMENT* dequeue(Fila *fila){
+    QUEUE_ELEMENT* aux=fila->inicioFila;
     fila->inicioFila=fila->inicioFila->siguiente;
     aux->siguiente=NULL;
     fila->currentSize--;
@@ -70,7 +70,7 @@ QUEUE_ELEMENT dequeue(Fila *fila){
 }
 
 void dequeueFree(Fila *fila){
-    QUEUE_ELEMENT aux=fila->inicioFila;
+    QUEUE_ELEMENT* aux=fila->inicioFila;
     fila->inicioFila=fila->inicioFila->siguiente;
     aux->siguiente=NULL;
     fila->currentSize--;
@@ -90,7 +90,7 @@ void eliminarFila(Fila *fila){
 void imprimirFila(Fila *fila){
     if(!fila)return;
     Fila *aux=crearFila(fila->currentSize);
-    QUEUE_ELEMENT nodoAux=NULL;
+    QUEUE_ELEMENT* nodoAux=NULL;
     while(!filaVacia(fila)){
         nodoAux=dequeue(fila);
         printf("%d ", nodoAux->valor);
@@ -107,7 +107,7 @@ void imprimirFila(Fila *fila){
 void invertirFila(Fila *fila){
     int longitud=fila->currentSize;
     NODE_ELEMENT *arreglo=(NODE_ELEMENT*)malloc(sizeof(NODE_ELEMENT)*longitud);
-    nodo *nodoAux=NULL;
+    QUEUE_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);
         arreglo[i]=nodoAux->valor;
@@ -119,7 +119,7 @@ void invertirFila(Fila *fila){
 NODE_ELEMENT sumarElementos(Fila *fila){
     int longitud=fila->currentSize;
     NODE_ELEMENT total=0;
-    nodo *nodoAux=NULL;
+    QUEUE_ELEMENT* nodoAux=NULL;
     Fila *aux=crearFila(fila->currentSize);
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);
@@ -138,7 +138,7 @@ Fila *copiarFila(Fila *fila){
     Fila *copiaFila=crearFila(fila->maxSize);
     int longitud=fila->currentSize;
     NODE_ELEMENT *arreglo=(NODE_ELEMENT*)malloc(sizeof(NODE_ELEMENT)*longitud);
-    nodo *nodoAux=NULL;
+    QUEUE_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);
         arreglo[i]=nodoAux->valor;
