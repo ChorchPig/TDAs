@@ -21,7 +21,7 @@ void crearVertice(Grafo *grafo, VECTOR_ELEMENT vertice){
     if(!grafo) return;
     agregarAlVector(grafo->vertices, vertice);
     int cantVertices=getCurrentSize(grafo->vertices), filasMatriz=getMatrixRows(grafo->aristas);
-    if(cantVertices>filasMatriz)ampliarMatriz(grafo->aristas, cantVertices, cantVertices);
+    if(cantVertices>filasMatriz)grafo->aristas=ampliarMatriz(grafo->aristas, cantVertices, cantVertices);
 }
 
 void eliminarVertice(Grafo *grafo, VECTOR_ELEMENT vertice){
@@ -92,7 +92,7 @@ void recorridoAmplitud(Grafo *grafo, void grafo_do(), void *contexto){
         free(nodoAux);
         eliminarVector(aristas);
     }
-    eliminarFila(aux);
+    eliminarFila(&aux);
     free(visitados);
 }
 
@@ -116,7 +116,7 @@ void recorridoProfundidad(Grafo *grafo, void grafo_do(), void *contexto){
         free(nodoAux);
         eliminarVector(aristas);
     }
-    eliminarPila(aux);
+    eliminarPila(&aux);
     free(visitados);
 }
 

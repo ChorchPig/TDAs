@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "prototipos/prototiposFila.h"
 
-QUEUE_ELEMENT* crearNodoFila(NODE_ELEMENT element) {
+QUEUE_ELEMENT* crearNodoFila(QNODE_ELEMENT element) {
     QUEUE_ELEMENT* new_node = (QUEUE_ELEMENT*)malloc(sizeof(QUEUE_ELEMENT));
     if (new_node){
         new_node->valor=element;
@@ -34,9 +34,9 @@ int filaVacia(Fila *fila){
     return estaVacia;
 }
 
-void enqueue(Fila *fila, NODE_ELEMENT element) {
+void enqueue(Fila *fila, QNODE_ELEMENT element) {
     QUEUE_ELEMENT* aux=crearNodoFila(element);
-    if(filaLlena(fila))return;
+    if(filaLlena(fila)||existeEnFila(fila, element))return;
     if(fila->inicioFila){
         fila->finalFila->siguiente=aux;
         fila->finalFila=aux;
@@ -49,7 +49,7 @@ void enqueue(Fila *fila, NODE_ELEMENT element) {
 }
 
 void enqueueNode(Fila *fila, QUEUE_ELEMENT* nuevoNodo){
-    if(filaLlena(fila))return;
+    if(filaLlena(fila)||existeEnFila(fila, nuevoNodo->valor))return;
     if(fila->inicioFila){
         fila->finalFila->siguiente=nuevoNodo;
         fila->finalFila=nuevoNodo;
@@ -77,14 +77,33 @@ void dequeueFree(Fila *fila){
     free(aux);
 }
 
-NODE_ELEMENT getFirstValue(Fila *fila){
+QNODE_ELEMENT getFirstValue(Fila *fila){
     return fila->inicioFila->valor;
 }
 
-void eliminarFila(Fila *fila){
-    if(!fila)return;
-    while(!filaVacia(fila))dequeueFree(fila);
-    free(fila);
+int existeEnFila(Fila *fila, QNODE_ELEMENT element){
+    int existe=0;
+    if(fila){
+        Fila *aux=crearFila(fila->currentSize);
+        QUEUE_ELEMENT* nodoAux=NULL;
+        while(!filaVacia(fila)){
+            nodoAux=dequeue(fila);
+            if(nodoAux->valor==element)existe=1;
+            enqueueNode(aux, nodoAux);
+        }
+        while(!filaVacia(aux)){
+            nodoAux=dequeue(aux);
+            enqueueNode(fila, nodoAux);
+        }
+        eliminarFila(&aux);
+    }
+    return existe;
+}
+
+void eliminarFila(Fila **fila){
+    if(!*fila)return;
+    while(!filaVacia(*fila))dequeueFree(*fila);
+    free(*fila); //por alguna razón se traba en esta parte
 }
 
 void imprimirFila(Fila *fila){
@@ -100,13 +119,13 @@ void imprimirFila(Fila *fila){
         nodoAux=dequeue(aux);
         enqueueNode(fila, nodoAux);
     }
-    eliminarFila(aux);
+    eliminarFila(&aux);
     printf("\n");
 }
 
 void invertirFila(Fila *fila){
     int longitud=fila->currentSize;
-    NODE_ELEMENT *arreglo=(NODE_ELEMENT*)malloc(sizeof(NODE_ELEMENT)*longitud);
+    QNODE_ELEMENT *arreglo=(QNODE_ELEMENT*)malloc(sizeof(QNODE_ELEMENT)*longitud);
     QUEUE_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);
@@ -116,28 +135,10 @@ void invertirFila(Fila *fila){
     free(arreglo);
 }
 
-NODE_ELEMENT sumarElementos(Fila *fila){
-    int longitud=fila->currentSize;
-    NODE_ELEMENT total=0;
-    QUEUE_ELEMENT* nodoAux=NULL;
-    Fila *aux=crearFila(fila->currentSize);
-    for(int i=0; i<longitud; i++){
-        nodoAux=dequeue(fila);
-        total+=nodoAux->valor;
-        enqueueNode(aux, nodoAux);
-    }
-    for(int i=0; i<longitud; i++){
-        nodoAux=dequeue(aux);
-        enqueueNode(fila, nodoAux);
-    }
-    eliminarFila(aux);
-    return total;
-}
-
 Fila *copiarFila(Fila *fila){
     Fila *copiaFila=crearFila(fila->maxSize);
     int longitud=fila->currentSize;
-    NODE_ELEMENT *arreglo=(NODE_ELEMENT*)malloc(sizeof(NODE_ELEMENT)*longitud);
+    QNODE_ELEMENT *arreglo=(QNODE_ELEMENT*)malloc(sizeof(QNODE_ELEMENT)*longitud);
     QUEUE_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);

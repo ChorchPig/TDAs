@@ -11,7 +11,7 @@ Pila* crearPila(int cantMaxima){
     return pila;
 }
 
-STACK_ELEMENT* crearNodoPila(NODE_ELEMENT element) {
+STACK_ELEMENT* crearNodoPila(SNODE_ELEMENT element) {
     STACK_ELEMENT* new_node = (STACK_ELEMENT*)malloc(sizeof(STACK_ELEMENT));
     if (new_node){
         new_node->valor=element;
@@ -20,8 +20,8 @@ STACK_ELEMENT* crearNodoPila(NODE_ELEMENT element) {
     return new_node;
 }
 
-void push(Pila *pila, NODE_ELEMENT element){
-    if(pilaLlena(pila))return;
+void push(Pila *pila, SNODE_ELEMENT element){
+    if(pilaLlena(pila)||existeEnPila(pila, element))return;
     if(!pila->tope)pila->tope=crearNodoPila(element);
     else{
         STACK_ELEMENT* aux=crearNodoPila(element);
@@ -32,7 +32,7 @@ void push(Pila *pila, NODE_ELEMENT element){
 }
 
 void pushNode(Pila *pila, STACK_ELEMENT* element){
-    if(pilaLlena(pila))return;
+    if(pilaLlena(pila)||existeEnPila(pila, element->valor))return;
     if(!pila->tope)pila->tope=element;
     else{
         element->siguiente=pila->tope;
@@ -56,7 +56,7 @@ void popFree(Pila *pila){
     if(pila->tope) free(pop(pila));
 }
 
-NODE_ELEMENT top(Pila *pila){
+SNODE_ELEMENT top(Pila *pila){
     return pila->tope->valor;
 }
 
@@ -70,7 +70,7 @@ int getStackCurrentSize(Pila *pila){
 
 int pilaLlena(Pila *pila){
     int llena=0;
-    if(!pila)return llena;
+    if(!pila||pila->maxSize==-1)return llena;
     if(pila->maxSize==pila->currentSize)llena=1;
     return llena;
 }
@@ -81,12 +81,10 @@ int pilaVacia(Pila *pila){
     return 0;
 }
 
-void eliminarPila(Pila *pila){
-    if(!pila)return;
-    while(!pilaVacia(pila)){
-        popFree(pila);
-    }
-    free(pila);
+void eliminarPila(Pila **pila){
+    if(!*pila)return;
+    while(!pilaVacia(*pila)) popFree(*pila);
+    free(*pila);
 }
 
 void imprimirPila(Pila *pila) {
@@ -102,7 +100,7 @@ void imprimirPila(Pila *pila) {
         nodoAux=pop(aux);
         pushNode(pila, nodoAux);
     }
-    eliminarPila(aux);
+    eliminarPila(&aux);
 }
 
 void invertirPila(Pila *pila){
@@ -121,14 +119,14 @@ void invertirPila(Pila *pila){
         nodoAux=pop(aux2);
         pushNode(pila, nodoAux);
     }
-    eliminarPila(aux1);
-    eliminarPila(aux2);
+    eliminarPila(&aux1);
+    eliminarPila(&aux2);
 }
 
 Pila* copiarPila(Pila *pila) {
     Pila *copiaPila=crearPila(getStackMaxSize(pila));
     int longitud=getStackCurrentSize(pila);
-    NODE_ELEMENT *arreglo=(NODE_ELEMENT *)malloc(sizeof(NODE_ELEMENT)*longitud);
+    SNODE_ELEMENT *arreglo=(SNODE_ELEMENT *)malloc(sizeof(SNODE_ELEMENT)*longitud);
     STACK_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=pop(pila);
@@ -140,4 +138,23 @@ Pila* copiarPila(Pila *pila) {
     invertirPila(pila);
     free(arreglo);
     return copiaPila;
+}
+
+int existeEnPila(Pila *pila, SNODE_ELEMENT element){
+    int existe=0;
+    if(pila){
+        Pila *aux=crearPila(pila->currentSize);
+        STACK_ELEMENT* nodoAux=NULL;
+        while(!pilaVacia(pila)){
+            nodoAux=pop(pila);
+            if(nodoAux->valor==element)existe=1;
+            pushNode(aux, nodoAux);
+        }
+        while(!pilaVacia(aux)){
+            nodoAux=pop(aux);
+            pushNode(pila, nodoAux);
+        }
+        eliminarPila(&aux);
+    }
+    return existe;
 }

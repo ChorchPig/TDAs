@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "prototipos/prototipos.h"
 
+
+
 int main(){
     Grafo *grafo=crearGrafo(5);
     crearVertice(grafo, 'a');
@@ -19,7 +21,7 @@ int main(){
     imprimirMatriz(aristas);
     printf("\n");
     char formato='c';
-    recorridoProfundidad(grafo, imprimirVertice, &formato);
+    recorridoAmplitud(grafo, imprimirVertice, &formato);
     printf("\n");
     eliminarGrafo(grafo);
     return 0;

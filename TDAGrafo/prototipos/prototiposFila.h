@@ -1,11 +1,11 @@
 #ifndef PROTOTIPOSFILA_H_INCLUDED
 #define PROTOTIPOSFILA_H_INCLUDED
 
-#define NODE_ELEMENT int
+#define QNODE_ELEMENT int
 #define QUEUE_ELEMENT nodoFila
 
 typedef struct _nodeQueue {
-    NODE_ELEMENT valor;
+    QNODE_ELEMENT valor;
     struct _nodeQueue *siguiente;
 } nodoFila;
 
@@ -15,17 +15,17 @@ typedef struct _queue{
     int maxSize, currentSize;
 }Fila;
 
-QUEUE_ELEMENT* crearNodoFila(NODE_ELEMENT);
+QUEUE_ELEMENT* crearNodoFila(QNODE_ELEMENT);
 Fila* crearFila(int);
-void enqueue(Fila*,NODE_ELEMENT);
+void enqueue(Fila*,QNODE_ELEMENT);
 void enqueueNode(Fila*, QUEUE_ELEMENT*);
 QUEUE_ELEMENT* dequeue(Fila*);
 void dequeueFree(Fila*);
 int filaLlena(Fila*);
 int filaVacia(Fila*);
-void eliminarFila(Fila*);
-NODE_ELEMENT getFirstValue(Fila*);
-
+void eliminarFila(Fila**);
+QNODE_ELEMENT getFirstValue(Fila*);
+int existeEnFila(Fila*,QNODE_ELEMENT);
 void imprimirFila(Fila*);
 void invertirFila(Fila*);
 Fila* copiarFila(Fila*);
