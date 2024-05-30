@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "prototipos.h"
 
-QUEUE_ELEMENT crearNodo(NODE_ELEMENT element) {
-    QUEUE_ELEMENT new_node = (QUEUE_ELEMENT)malloc(sizeof(nodo));
+QUEUE_ELEMENT* crearNodoFila(QNODE_ELEMENT element) {
+    QUEUE_ELEMENT* new_node = (QUEUE_ELEMENT*)malloc(sizeof(QUEUE_ELEMENT));
     if (new_node){
         new_node->valor=element;
         new_node->siguiente=NULL;
@@ -22,7 +22,7 @@ Fila* crearFila(int maximo){
 
 int filaLlena(Fila *fila){
     int estaLlena=0;
-    if(!fila)return estaLlena;
+    if(!fila||fila->maxSize==-1)return estaLlena;
     if(fila->currentSize==fila->maxSize)estaLlena=1;
     return estaLlena;
 }
@@ -34,118 +34,108 @@ int filaVacia(Fila *fila){
     return estaVacia;
 }
 
-void enqueue(Fila *fila, NODE_ELEMENT element) {
-    QUEUE_ELEMENT aux=crearNodo(element);
-    if(filaLlena(fila))return;
-    if(fila->inicioFila){
-        fila->finalFila->siguiente=aux;
-        fila->finalFila=aux;
+int existeEnFila(Fila **fila, QNODE_ELEMENT element){
+    int existe=0;
+    if(*fila&&!filaVacia(*fila)){
+        Fila *aux=crearFila((*fila)->currentSize);
+        QUEUE_ELEMENT* nodoAux=NULL;
+        while(!filaVacia(*fila)){
+            nodoAux=dequeue(fila);
+            if(nodoAux->valor==element)existe=1;
+            enqueue(&aux, nodoAux);
+        }
+        while(!filaVacia(aux)){
+            nodoAux=dequeue(&aux);
+            enqueue(fila, nodoAux);
+        }
+        eliminarFila(&aux);
     }
-    else {
-        fila->inicioFila=aux;
-        fila->finalFila=aux;
-    }
-    fila->currentSize++;
+    return existe;
 }
 
-void enqueueNode(Fila *fila, QUEUE_ELEMENT nuevoNodo){
-    if(filaLlena(fila))return;
-    if(fila->inicioFila){
-        fila->finalFila->siguiente=nuevoNodo;
-        fila->finalFila=nuevoNodo;
+void enqueue(Fila **fila, QUEUE_ELEMENT* nuevoNodo){
+    if(filaLlena(*fila)||existeEnFila(fila, nuevoNodo->valor))return;
+    if((*fila)->inicioFila){
+        (*fila)->finalFila->siguiente=nuevoNodo;
+        (*fila)->finalFila=nuevoNodo;
     }
     else {
-        fila->inicioFila=nuevoNodo;
-        fila->finalFila=nuevoNodo;
+        (*fila)->inicioFila=nuevoNodo;
+        (*fila)->finalFila=nuevoNodo;
     }
-    fila->currentSize++;
+    (*fila)->currentSize++;
 }
 
-QUEUE_ELEMENT dequeue(Fila *fila){
-    QUEUE_ELEMENT aux=fila->inicioFila;
-    fila->inicioFila=fila->inicioFila->siguiente;
+void enqueueValue(Fila **fila, QNODE_ELEMENT element) {
+    if(filaLlena(*fila)||existeEnFila(fila, element))return;
+    QUEUE_ELEMENT* aux=crearNodoFila(element);
+    enqueue(fila, aux);
+}
+
+QUEUE_ELEMENT* dequeue(Fila **fila){
+    QUEUE_ELEMENT* aux=(*fila)->inicioFila;
+    (*fila)->inicioFila=(*fila)->inicioFila->siguiente;
     aux->siguiente=NULL;
-    fila->currentSize--;
+    (*fila)->currentSize--;
     return aux;
 }
 
-void dequeueFree(Fila *fila){
-    QUEUE_ELEMENT aux=fila->inicioFila;
-    fila->inicioFila=fila->inicioFila->siguiente;
-    aux->siguiente=NULL;
-    fila->currentSize--;
+void dequeueFree(Fila **fila){
+    QUEUE_ELEMENT* aux=dequeue(fila);
     free(aux);
 }
 
-NODE_ELEMENT getFirstValue(Fila *fila){
+QNODE_ELEMENT getFirstValue(Fila *fila){
     return fila->inicioFila->valor;
 }
 
-void eliminarFila(Fila *fila){
-    if(!fila)return;
-    while(!filaVacia(fila))dequeueFree(fila);
-    free(fila);
+void eliminarFila(Fila **fila){
+    if(!*fila)return;
+    while(!filaVacia(*fila))dequeueFree(fila);
+    free(*fila);
 }
 
-void imprimirFila(Fila *fila){
-    if(!fila)return;
-    Fila *aux=crearFila(fila->currentSize);
-    QUEUE_ELEMENT nodoAux=NULL;
-    while(!filaVacia(fila)){
+void imprimirFila(Fila **fila){
+    if(!*fila)return;
+    Fila *aux=crearFila((*fila)->currentSize);
+    QUEUE_ELEMENT* nodoAux=NULL;
+    while(!filaVacia(*fila)){
         nodoAux=dequeue(fila);
         printf("%d ", nodoAux->valor);
-        enqueueNode(aux, nodoAux);
+        enqueue(&aux, nodoAux);
     }
     while(!filaVacia(aux)){
-        nodoAux=dequeue(aux);
-        enqueueNode(fila, nodoAux);
+        nodoAux=dequeue(&aux);
+        enqueue(fila, nodoAux);
     }
-    eliminarFila(aux);
+    eliminarFila(&aux);
     printf("\n");
 }
 
-void invertirFila(Fila *fila){
-    int longitud=fila->currentSize;
-    NODE_ELEMENT *arreglo=(NODE_ELEMENT*)malloc(sizeof(NODE_ELEMENT)*longitud);
-    nodo *nodoAux=NULL;
+void invertirFila(Fila **fila){
+    int longitud=(*fila)->currentSize;
+    QNODE_ELEMENT *arreglo=(QNODE_ELEMENT*)malloc(sizeof(QNODE_ELEMENT)*longitud);
+    QUEUE_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);
         arreglo[i]=nodoAux->valor;
     }
-    for(int i=longitud; i>0; i--)enqueue(fila, arreglo[i-1]);
+    for(int i=longitud; i>0; i--)enqueueValue(fila, arreglo[i-1]);
     free(arreglo);
 }
 
-NODE_ELEMENT sumarElementos(Fila *fila){
-    int longitud=fila->currentSize;
-    NODE_ELEMENT total=0;
-    nodo *nodoAux=NULL;
-    Fila *aux=crearFila(fila->currentSize);
-    for(int i=0; i<longitud; i++){
-        nodoAux=dequeue(fila);
-        total+=nodoAux->valor;
-        enqueueNode(aux, nodoAux);
-    }
-    for(int i=0; i<longitud; i++){
-        nodoAux=dequeue(aux);
-        enqueueNode(fila, nodoAux);
-    }
-    eliminarFila(aux);
-    return total;
-}
-
-Fila *copiarFila(Fila *fila){
-    Fila *copiaFila=crearFila(fila->maxSize);
-    int longitud=fila->currentSize;
-    NODE_ELEMENT *arreglo=(NODE_ELEMENT*)malloc(sizeof(NODE_ELEMENT)*longitud);
-    nodo *nodoAux=NULL;
+Fila *copiarFila(Fila **fila){
+    Fila *copiaFila=crearFila((*fila)->maxSize);
+    int longitud=(*fila)->currentSize;
+    QNODE_ELEMENT *arreglo=(QNODE_ELEMENT*)malloc(sizeof(QNODE_ELEMENT)*longitud);
+    QUEUE_ELEMENT* nodoAux=NULL;
     for(int i=0; i<longitud; i++){
         nodoAux=dequeue(fila);
         arreglo[i]=nodoAux->valor;
     }
     for(int i=0; i<longitud; i++){
-        enqueue(fila, arreglo[i]);
-        enqueue(copiaFila, arreglo[i]);
+        enqueueValue(fila, arreglo[i]);
+        enqueueValue(&copiaFila, arreglo[i]);
     }
     free(arreglo);
     return copiaFila;
