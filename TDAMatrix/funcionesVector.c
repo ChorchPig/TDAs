@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "prototipos.h"
+#include "prototiposVector.h"
 
 Vector* crearVector(int initialSize){
     Vector *ptr=(Vector *)malloc(sizeof(Vector));
@@ -64,18 +64,7 @@ void eliminarVector(Vector *vector){
     free(vector);
 }
 
-int productoEscalar(Vector *vector1, Vector *vector2){
-    int resultado=0, n=getCurrentSize(vector1), aux=0;
-    if(n==getCurrentSize(vector2)){
-        for(int i=0; i<n; i++){
-            aux=getValueInVector(vector1, i)*getValueInVector(vector2, i);
-            resultado+=aux;
-        }
-    }
-    return resultado;
-}
-
-int sequential_search(int key, VECTOR_ELEMENT *arreglo, int n){
+int sequential_search(VECTOR_ELEMENT key, VECTOR_ELEMENT *arreglo, int n){
     int i=0;
     while ((i<n)&&(arreglo[i]!=key)){
         i++;
@@ -105,10 +94,7 @@ void ordenarVector(Vector *vector){
     (option==1)? bubble_sort(vector->arreglo, getCurrentSize(vector), criterioComparacion(2, 1)) : bubble_sort(vector->arreglo, getCurrentSize(vector), criterioComparacion(1, 2));
 }
 
-int criterioComparacion(VECTOR_ELEMENT elemento1, VECTOR_ELEMENT elemento2){
-    int resultado=elemento1-elemento2;
-    return resultado;
-}
+int criterioComparacion(VECTOR_ELEMENT elemento1, VECTOR_ELEMENT elemento2){ return elemento1-elemento2; }
 
 void bubble_sort(VECTOR_ELEMENT *vector, int n, int criterio){
     char swapped = 1;
@@ -128,8 +114,8 @@ void bubble_sort(VECTOR_ELEMENT *vector, int n, int criterio){
     }
 }
 
-void swap(VECTOR_ELEMENT *a, VECTOR_ELEMENT* b){
-    VECTOR_ELEMENT aux = *a;
-    *a = *b;
-    *b = aux;
+void swap(void *a, void *b){
+    void *aux = a;
+    a = b;
+    b = aux;
 }

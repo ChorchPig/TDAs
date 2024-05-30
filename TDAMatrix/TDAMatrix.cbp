@@ -41,6 +41,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="prototipos.h" />
+		<Unit filename="prototiposVector.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
