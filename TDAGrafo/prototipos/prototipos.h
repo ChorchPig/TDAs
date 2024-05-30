@@ -16,7 +16,7 @@ void crearArista(Grafo*,VECTOR_ELEMENT,VECTOR_ELEMENT);
 void eliminarGrafo(Grafo*);
 void eliminarVertice(Grafo*,VECTOR_ELEMENT);
 void eliminarArista(Grafo*,VECTOR_ELEMENT,VECTOR_ELEMENT);
-int verticesAdyacentes(VECTOR_ELEMENT vertice1, VECTOR_ELEMENT vertice2);
+
 Vector* obtenerVertices(Grafo*);
 int obtenerCantVertices(Grafo*);
 matrix* obtenerAristas(Grafo*);
@@ -24,5 +24,8 @@ int obtenerGradoVertice(Grafo*,int);
 void recorridoAmplitud(Grafo*,void(),void*);
 void recorridoProfundidad(Grafo*,void(),void*);
 void imprimirVertice(Grafo*,int,char*);
+int grafoDirigido(Grafo*);
+int grafoCompleto(Grafo*);
+int grafoVacio(Grafo*);
 
 #endif // PROTOTIPOS_H_INCLUDED

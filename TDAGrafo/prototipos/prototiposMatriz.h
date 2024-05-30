@@ -22,6 +22,8 @@ matrix* copiarMatriz(matrix*);
 matrix* ampliarMatriz(matrix*,int,int);
 Vector* extraerFila(matrix*,int);
 Vector* extraerColumna(matrix*,int);
-
+int matrizSimetrica(matrix*);
+matrix* deleteRow(matrix*,int);
+matrix* deleteColumn(matrix*,int);
 
 #endif // PROTOTIPOSMATRIZ_H_INCLUDED

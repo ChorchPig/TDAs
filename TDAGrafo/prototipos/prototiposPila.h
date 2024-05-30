@@ -15,8 +15,8 @@ typedef struct _stack {
 } Pila;
 
 Pila* crearPila(int);
-void push(Pila*,SNODE_ELEMENT);
-void pushNode(Pila*,STACK_ELEMENT*);
+void pushValue(Pila*,SNODE_ELEMENT);
+void push(Pila*,STACK_ELEMENT*);
 STACK_ELEMENT* crearNodoPila(SNODE_ELEMENT);
 STACK_ELEMENT* pop(Pila*);
 void popFree(Pila*);

@@ -116,3 +116,17 @@ matrix* ampliarMatriz(matrix *Matrix, int filas, int columnas){
     }
     return nuevaMatriz;
 }
+
+int matrizSimetrica(matrix *Matrix){
+    int simetrica=1;
+    int i=0, filas=getMatrixRows(Matrix), columnas=getMatrixColumns(Matrix);
+    while(i<filas&&simetrica){
+        int j=i+1;
+        while(j<columnas&&simetrica){
+            if(getValueInMatrix(Matrix, i, j)!=getValueInMatrix(Matrix, j, i))simetrica=0;
+            j++;
+        }
+        i++;
+    }
+    return simetrica;
+}

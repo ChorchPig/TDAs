@@ -17,17 +17,17 @@ typedef struct _queue{
 
 QUEUE_ELEMENT* crearNodoFila(QNODE_ELEMENT);
 Fila* crearFila(int);
-void enqueue(Fila*,QNODE_ELEMENT);
-void enqueueNode(Fila*, QUEUE_ELEMENT*);
-QUEUE_ELEMENT* dequeue(Fila*);
-void dequeueFree(Fila*);
+void enqueueValue(Fila**,QNODE_ELEMENT);
+void enqueue(Fila**, QUEUE_ELEMENT*);
+QUEUE_ELEMENT* dequeue(Fila**);
+void dequeueFree(Fila**);
 int filaLlena(Fila*);
 int filaVacia(Fila*);
 void eliminarFila(Fila**);
 QNODE_ELEMENT getFirstValue(Fila*);
-int existeEnFila(Fila*,QNODE_ELEMENT);
-void imprimirFila(Fila*);
-void invertirFila(Fila*);
-Fila* copiarFila(Fila*);
+int existeEnFila(Fila**,QNODE_ELEMENT);
+void imprimirFila(Fila**);
+void invertirFila(Fila**);
+Fila* copiarFila(Fila**);
 
 #endif // PROTOTIPOSFILA_H_INCLUDED
