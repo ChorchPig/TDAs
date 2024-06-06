@@ -3,9 +3,7 @@
 #include "prototipos/prototipos.h"
 
 int verticesAdyacentes(VECTOR_ELEMENT vertice1, VECTOR_ELEMENT vertice2);
-int obtenerPesoArista(Grafo *grafo, char origen, char destino);
 int obtenerCostoArista(Grafo*,char origen, char destino);
-
 
 int main(){
     Grafo *grafo=crearGrafo(5);
@@ -14,45 +12,21 @@ int main(){
     crearVertice(grafo, 'c');
     crearVertice(grafo, 'd');
     crearVertice(grafo, 'e');
-    crearArista(grafo, 'a', 'c');
-    crearArista(grafo, 'a', 'd');
-    crearArista(grafo, 'b', 'd');
-    crearArista(grafo, 'b', 'e');
-    crearArista(grafo, 'a', 'c');
-    crearArista(grafo, 'e', 'c');
-    matrix *aristas=obtenerAristas(grafo);
-    imprimirMatriz(aristas);
-    printf("\n");
-    char formato='c';
-    recorridoAmplitud(grafo, imprimirVertice, &formato);
-    eliminarVertice(grafo, 'a');
-    aristas=obtenerAristas(grafo);
-    printf("\n");
-    imprimirMatriz(aristas);
+    crearAristaNoDirigida(grafo, 'a', 'c', 1);
+    crearAristaNoDirigida(grafo, 'a', 'd', 1);
+    crearAristaNoDirigida(grafo, 'b', 'd', 1);
+    crearAristaNoDirigida(grafo, 'b', 'e', 1);
+    crearAristaNoDirigida(grafo, 'a', 'c', 1);
+    crearAristaNoDirigida(grafo, 'e', 'c', 1);
     eliminarGrafo(grafo);
     return 0;
 }
 
-matrix* deleteRow(matrix *Matrix, int filaAEliminar){
-    int filas=getMatrixRows(Matrix), columnas=getMatrixColumns(Matrix);
-    matrix* nuevaMatriz=crearMatriz(filas-1, columnas);
-    for(int i=0; i<filas; i++){
-        if(i!=filaAEliminar){
-            for(int j=0; j<columnas; j++)setValueInMatrix(nuevaMatriz, getValueInMatrix(Matrix, i,j),i,j);
-        }
-    }
-    free(Matrix);
-    return nuevaMatriz;
-}
-
-matrix* deleteColumn(matrix *Matrix, int columnaAEliminar){
-    int filas=getMatrixRows(Matrix), columnas=getMatrixColumns(Matrix);
-    matrix* nuevaMatriz=crearMatriz(filas, columnas-1);
-    for(int j=0; j<columnas; j++){
-        if(j!=columnaAEliminar){
-            for(int i=0; i<filas; i++)setValueInMatrix(nuevaMatriz, getValueInMatrix(Matrix, i,j),i,j);
-        }
-    }
-    free(Matrix);
-    return nuevaMatriz;
+int obtenerPesoArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){//Conoce la implementación del TDAVector
+    matrix *aristas=obtenerAristas(grafo);
+    Vector *vertices=obtenerVertices(grafo);
+    int longitud=getCurrentSize(vertices);
+    int indiceOrigen=sequential_search(origen, vertices->arreglo, longitud);
+    int indiceDestino=sequential_search(destino, vertices->arreglo, longitud);
+    return (indiceOrigen>-1&&indiceDestino>-1)? getValueInMatrix(aristas, indiceOrigen, indiceDestino) : -1;
 }

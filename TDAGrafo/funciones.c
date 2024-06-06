@@ -24,42 +24,46 @@ void crearVertice(Grafo *grafo, VECTOR_ELEMENT vertice){
     if(cantVertices>filasMatriz)grafo->aristas=ampliarMatriz(grafo->aristas, cantVertices, cantVertices);
 }
 
-void eliminarVertice(Grafo *grafo, VECTOR_ELEMENT vertice){//la función no actualiza las aristas correctamente
+void eliminarVertice(Grafo *grafo, VECTOR_ELEMENT vertice){ //Conoce la implementación del TDAVector
     if(!grafo) return;
-    int indiceVertice=sequential_search(vertice, grafo->vertices->arreglo, grafo->vertices->currentSize);
-    grafo->aristas=deleteRow(grafo->aristas, indiceVertice);
-    grafo->aristas=deleteColumn(grafo->aristas, indiceVertice);
+    int longitud=getCurrentSize(grafo->vertices);
+    int indiceVertice=sequential_search(vertice, grafo->vertices->arreglo, longitud);
+    deleteRow(grafo->aristas, indiceVertice);
+    deleteColumn(grafo->aristas, indiceVertice);
     eliminarDelVector(grafo->vertices, vertice);
 }
 
-void crearArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){
+void crearArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino, int peso){ //Conoce la implementación del TDAVector
     if(!grafo) return;
     Vector *vertices=obtenerVertices(grafo);
-    int indiceOrigen=sequential_search(origen, vertices->arreglo, vertices->currentSize);
-    int indiceDestino=sequential_search(destino, vertices->arreglo, vertices->currentSize);
-    if(indiceOrigen>-1&&indiceDestino>-1){
-        setValueInMatrix(grafo->aristas, 1, indiceOrigen, indiceDestino);
-        setValueInMatrix(grafo->aristas, 1, indiceDestino, indiceOrigen); //esta invocación es por que el grafo no es dirigido
-    }
+    int longitud=getCurrentSize(vertices);
+    int indiceOrigen=sequential_search(origen, vertices->arreglo, longitud);
+    int indiceDestino=sequential_search(destino, vertices->arreglo, longitud);
+    if(indiceOrigen>-1&&indiceDestino>-1) setValueInMatrix(grafo->aristas, peso, indiceOrigen, indiceDestino);
 }
 
-void eliminarArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){
+void eliminarArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){ //Conoce la implementación del TDAVector
     if(!grafo) return;
     Vector *vertices=obtenerVertices(grafo);
-    int indiceOrigen=sequential_search(origen, vertices->arreglo, vertices->currentSize);
-    int indiceDestino=sequential_search(destino, vertices->arreglo, vertices->currentSize);
-    if(indiceOrigen>-1&&indiceDestino>-1){
-        eliminarDeMatriz(grafo->aristas, indiceOrigen, indiceDestino);
-        eliminarDeMatriz(grafo->aristas, indiceDestino, indiceOrigen); //esta invocación es por que el grafo no es dirigido
-    }
+    int longitud=getCurrentSize(vertices);
+    int indiceOrigen=sequential_search(origen, vertices->arreglo, longitud);
+    int indiceDestino=sequential_search(destino, vertices->arreglo, longitud);
+    if(indiceOrigen>-1&&indiceDestino>-1) eliminarValorMatriz(grafo->aristas, indiceOrigen, indiceDestino);
+}
+
+void crearAristaNoDirigida(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino, int peso){
+    crearArista(grafo, origen, destino, peso);
+    crearArista(grafo, destino, origen, peso);
+}
+
+void eliminarAristaNoDirigida(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){
+    eliminarArista(grafo, origen, destino);
+    eliminarArista(grafo, destino, origen);
 }
 
 Vector* obtenerVertices(Grafo *grafo){ return grafo->vertices; }
 matrix* obtenerAristas(Grafo *grafo){ return grafo->aristas; }
-
-int obtenerCantVertices(Grafo *grafo){
-    return grafo->vertices->currentSize;
-}
+int obtenerCantVertices(Grafo *grafo){ return getCurrentSize(grafo->vertices); }
 
 int obtenerGradoVertice(Grafo *grafo, int verticeIndice){
     int grado=-1;

@@ -5,25 +5,26 @@
 #define MATRIX_ELEMENT int
 
 typedef struct{
-   MATRIX_ELEMENT* arreglo;
+   MATRIX_ELEMENT** datos;
    int rows, columns;
 } matrix;
 
 matrix* crearMatriz(int,int);
-void eliminarDeMatriz(matrix*,int,int);
-void eliminarMatriz(matrix*);
+void setValueInMatrix(matrix*,MATRIX_ELEMENT,int,int);
 int getMatrixRows(matrix*);
 int getMatrixColumns(matrix*);
 MATRIX_ELEMENT getValueInMatrix(matrix*,int,int);
-void setValueInMatrix(matrix*,MATRIX_ELEMENT,int,int);
-void imprimirMatriz(matrix*);
-matrix* trasponerMatriz(matrix*);
+void eliminarValorMatriz(matrix*,int,int);
+void deleteRow(matrix*,int);
+void deleteColumn(matrix*,int);
+void eliminarMatriz(matrix*);
+void imprimirMatriz(matrix*); //pasar el print como función
+matrix* trasponerMatriz(matrix*); //Revisar más tarde
 matrix* copiarMatriz(matrix*);
 matrix* ampliarMatriz(matrix*,int,int);
 Vector* extraerFila(matrix*,int);
 Vector* extraerColumna(matrix*,int);
 int matrizSimetrica(matrix*);
-matrix* deleteRow(matrix*,int);
-matrix* deleteColumn(matrix*,int);
+
 
 #endif // PROTOTIPOSMATRIZ_H_INCLUDED

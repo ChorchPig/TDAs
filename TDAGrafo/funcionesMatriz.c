@@ -5,53 +5,58 @@
 matrix* crearMatriz(int filas, int columnas){
     matrix *Matrix=(matrix*)malloc(sizeof(matrix));
     if(!Matrix||filas<=0||columnas<=0)return Matrix;
-    Matrix->arreglo=(MATRIX_ELEMENT *)malloc(sizeof(MATRIX_ELEMENT *)*filas*columnas);
-    if(Matrix->arreglo){
+    Matrix->datos=(MATRIX_ELEMENT **)malloc(sizeof(MATRIX_ELEMENT*)*filas);
+    for(int i=0; i<filas; i++)Matrix->datos[i]=(MATRIX_ELEMENT*)calloc(columnas,sizeof(MATRIX_ELEMENT));
+    if(Matrix->datos){
         Matrix->rows=filas;
         Matrix->columns=columnas;
-        for(int i=0; i<filas; i++){
-            for(int j=0; j<columnas; j++) setValueInMatrix(Matrix, 0, i, j);
-        }
     }
     return Matrix;
 }
 
-void eliminarDeMatriz(matrix *Matrix, int fila, int columna){
+void eliminarValorMatriz(matrix *Matrix, int fila, int columna){
     if(Matrix)setValueInMatrix(Matrix, 0, fila, columna);
 }
 
 void eliminarMatriz(matrix* Matrix){
-    free(Matrix->arreglo);
+    for(int i=0; i<Matrix->rows; i++) free(Matrix->datos[i]);
+    free(Matrix->datos);
     free(Matrix);
 }
 
-int getMatrixRows(matrix* Matrix){
-    return Matrix->rows;
-}
-
-int getMatrixColumns(matrix* Matrix){
-    return Matrix->columns;
-}
-
-MATRIX_ELEMENT getValueInMatrix(matrix* Matrix, int row, int column){
-    return Matrix->arreglo[row*Matrix->rows+column];
-}
+int getMatrixRows(matrix* Matrix){ return Matrix->rows; }
+int getMatrixColumns(matrix* Matrix){ return Matrix->columns; }
+MATRIX_ELEMENT getValueInMatrix(matrix* Matrix, int row, int column){ return Matrix->datos[row][column]; }
 
 void setValueInMatrix(matrix* Matrix, MATRIX_ELEMENT value, int fila, int columna){
-    if(Matrix){
-        if(fila<0||fila>=Matrix->rows)return;
-        if(columna<0||columna>=Matrix->columns)return;
-        Matrix->arreglo[fila*Matrix->rows+columna]=value;
+    if(Matrix&&fila>=0&&fila<Matrix->rows&&columna>=0&&columna<Matrix->columns){
+        Matrix->datos[fila][columna]=value;
     }
 }
 
-void imprimirMatriz(matrix* Matrix){//void prt(void*), imprime una matriz 3*3 incluso si no hay valores asignados
-    int columnas=getMatrixColumns(Matrix), filas=getMatrixRows(Matrix);
-    for(int i=0; i<filas; i++){
-        for(int j=0; j<columnas; j++)printf("%d ", getValueInMatrix(Matrix, i, j));
-        printf("\n");
+void deleteRow(matrix *Matrix, int filaAEliminar){
+    int filas=getMatrixRows(Matrix), columnas=getMatrixColumns(Matrix);
+    for(int j=0; j<columnas; j++){
+        for(int i=filaAEliminar; i<filas-1; i++){
+            Matrix->datos[i][j]=Matrix->datos[i+1][j];
+        }
     }
+    MATRIX_ELEMENT **aux=&Matrix->datos[filas];
+    Matrix->datos[filas]=NULL;
+    free(*aux);
+    Matrix->rows--;
 }
+
+void deleteColumn(matrix *Matrix, int columnaAEliminar){
+    int filas=getMatrixRows(Matrix), columnas=getMatrixColumns(Matrix);
+    for(int i=0; i<filas; i++){
+        for(int j=columnaAEliminar; j<columnas-1; j++){
+            Matrix->datos[i][j]=Matrix->datos[i][j+1];
+        }
+    }
+    Matrix->columns--;
+}
+
 
 Vector *extraerFila(matrix *Matrix, int fila){
     if(!Matrix)return NULL;
@@ -87,13 +92,13 @@ matrix* copiarMatriz(matrix *Matrix){
     return copiaMatriz;
 }
 
-matrix *trasponerMatriz(matrix *Matrix){
+matrix *trasponerMatriz(matrix *Matrix){//Revisar más tarde
     matrix *ptr=copiarMatriz(Matrix);
     if(ptr){
         int filas=getMatrixRows(ptr), columnas=getMatrixColumns(ptr);
         for(int i=0; i<filas; i++){
             for(int j=0; j<columnas; j++){
-                if(i!=j)swap(&ptr->arreglo[i*filas+j], &ptr->arreglo[j*filas+i]);
+                if(i!=j)swap(&ptr->datos[i][j], &ptr->datos[j][i]);
             }
         }
     }
@@ -129,4 +134,12 @@ int matrizSimetrica(matrix *Matrix){
         i++;
     }
     return simetrica;
+}
+
+void imprimirMatriz(matrix* Matrix){//pasar el print como función
+    int columnas=getMatrixColumns(Matrix), filas=getMatrixRows(Matrix);
+    for(int i=0; i<filas; i++){
+        for(int j=0; j<columnas; j++)printf("%d ", getValueInMatrix(Matrix, i, j));
+        printf("\n");
+    }
 }
