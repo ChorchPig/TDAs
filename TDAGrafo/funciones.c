@@ -24,30 +24,30 @@ void crearVertice(Grafo *grafo, VECTOR_ELEMENT vertice){
     if(cantVertices>filasMatriz)grafo->aristas=ampliarMatriz(grafo->aristas, cantVertices, cantVertices);
 }
 
-void eliminarVertice(Grafo *grafo, VECTOR_ELEMENT vertice){ //Conoce la implementación del TDAVector
+void eliminarVertice(Grafo *grafo, VECTOR_ELEMENT vertice){
     if(!grafo) return;
     int longitud=getCurrentSize(grafo->vertices);
-    int indiceVertice=sequential_search(vertice, grafo->vertices->arreglo, longitud);
+    int indiceVertice=sequential_search(vertice, grafo->vertices, longitud);
     deleteRow(grafo->aristas, indiceVertice);
     deleteColumn(grafo->aristas, indiceVertice);
     eliminarDelVector(grafo->vertices, vertice);
 }
 
-void crearArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino, int peso){ //Conoce la implementación del TDAVector
+void crearArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino, int peso){
     if(!grafo) return;
     Vector *vertices=obtenerVertices(grafo);
     int longitud=getCurrentSize(vertices);
-    int indiceOrigen=sequential_search(origen, vertices->arreglo, longitud);
-    int indiceDestino=sequential_search(destino, vertices->arreglo, longitud);
+    int indiceOrigen=sequential_search(origen, vertices, longitud);
+    int indiceDestino=sequential_search(destino, vertices, longitud);
     if(indiceOrigen>-1&&indiceDestino>-1) setValueInMatrix(grafo->aristas, peso, indiceOrigen, indiceDestino);
 }
 
-void eliminarArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){ //Conoce la implementación del TDAVector
+void eliminarArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){
     if(!grafo) return;
     Vector *vertices=obtenerVertices(grafo);
     int longitud=getCurrentSize(vertices);
-    int indiceOrigen=sequential_search(origen, vertices->arreglo, longitud);
-    int indiceDestino=sequential_search(destino, vertices->arreglo, longitud);
+    int indiceOrigen=sequential_search(origen, vertices, longitud);
+    int indiceDestino=sequential_search(destino, vertices, longitud);
     if(indiceOrigen>-1&&indiceDestino>-1) eliminarValorMatriz(grafo->aristas, indiceOrigen, indiceDestino);
 }
 
@@ -77,6 +77,20 @@ int obtenerGradoVertice(Grafo *grafo, int verticeIndice){
         free(conexiones);
     }
     return grado;
+}
+
+int obtenerPesoArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){
+    matrix *aristas=obtenerAristas(grafo);
+    Vector *vertices=obtenerVertices(grafo);
+    int longitud=getCurrentSize(vertices);
+    int indiceOrigen=sequential_search(origen, vertices, longitud);
+    int indiceDestino=sequential_search(destino, vertices, longitud);
+    return (indiceOrigen>-1&&indiceDestino>-1)? getValueInMatrix(aristas, indiceOrigen, indiceDestino) : -1;
+}
+
+int obtenerCostoArista(Grafo *grafo, VECTOR_ELEMENT origen, VECTOR_ELEMENT destino){
+    int costo=obtenerPesoArista(grafo, origen, destino);
+    return (costo)? costo : INFINITO;
 }
 
 void recorridoAmplitud(Grafo *grafo, void grafo_do(), void *contexto){

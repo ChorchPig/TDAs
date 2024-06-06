@@ -53,6 +53,7 @@ void deleteColumn(matrix *Matrix, int columnaAEliminar){
         for(int j=columnaAEliminar; j<columnas-1; j++){
             Matrix->datos[i][j]=Matrix->datos[i][j+1];
         }
+//        Matrix->datos[i][columnas-1]=0;
     }
     Matrix->columns--;
 }
@@ -117,7 +118,7 @@ matrix* ampliarMatriz(matrix *Matrix, int filas, int columnas){
                 }
             }
         }
-        free(Matrix);
+        eliminarMatriz(Matrix);
     }
     return nuevaMatriz;
 }

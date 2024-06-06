@@ -64,9 +64,9 @@ void eliminarVector(Vector *vector){
     free(vector);
 }
 
-int sequential_search(VECTOR_ELEMENT key, VECTOR_ELEMENT *arreglo, int n){
+int sequential_search(VECTOR_ELEMENT key, Vector *vector, int n){
     int i=0;
-    while ((i<n)&&(arreglo[i]!=key)){
+    while ((i<n)&&(getValueInVector(vector, i)!=key)){
         i++;
     }
     return (i>=n)? -1 : i;

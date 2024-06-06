@@ -21,7 +21,7 @@ void eliminarVector(Vector*);
 int criterioComparacion(VECTOR_ELEMENT elemento1, VECTOR_ELEMENT elemento2);
 void swap(void*,void*);
 void bubble_sort(VECTOR_ELEMENT *vector, int n, int criterio);
-int sequential_search(VECTOR_ELEMENT,VECTOR_ELEMENT*,int);
+int sequential_search(VECTOR_ELEMENT,Vector*,int);
 int binary_search(int key, Vector *vector);
 
 #endif // PROTOTIPOSVECTOR_H_INCLUDED
