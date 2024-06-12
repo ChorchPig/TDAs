@@ -2,17 +2,6 @@
 #include <stdlib.h>
 #include "prototipos/prototipos.h"
 
-int verticesAdyacentes(VECTOR_ELEMENT vertice1, VECTOR_ELEMENT vertice2);
-int* obtenerAristasSalida(Grafo*,int);
-
-typedef struct{
-    int *costos;
-    char *predecesores;
-}TablaD;
-
-TablaD* algoritmoDijkstra(Grafo*, int, int);
-int minimoNoVisitado(int[], TablaD*, int);
-
 int main(){
     Grafo *grafo=crearGrafo(5);
     crearVertice(grafo, 'a');
@@ -20,48 +9,42 @@ int main(){
     crearVertice(grafo, 'c');
     crearVertice(grafo, 'd');
     crearVertice(grafo, 'e');
-    crearAristaNoDirigida(grafo, 'a', 'c', 1);
-    crearAristaNoDirigida(grafo, 'a', 'd', 1);
-    crearAristaNoDirigida(grafo, 'b', 'd', 1);
-    crearAristaNoDirigida(grafo, 'b', 'e', 1);
-    crearAristaNoDirigida(grafo, 'a', 'c', 1);
-    crearAristaNoDirigida(grafo, 'e', 'c', 1);
+    crearVertice(grafo, 'f');
+    crearVertice(grafo, 'g');
+    crearVertice(grafo, 'h');
+    crearVertice(grafo, 'i');
+    crearVertice(grafo, 'j');
+    crearVertice(grafo, 'k');
+    crearArista(grafo, 'a', 'b', 3);
+    crearArista(grafo, 'a', 'e', 5);
+    crearArista(grafo, 'a', 'h', 4);
+    crearArista(grafo, 'b', 'c', 2);
+    crearArista(grafo, 'b', 'f', 7);
+    crearArista(grafo, 'c', 'd', 3);
+    crearArista(grafo, 'c', 'f', 2);
+    crearArista(grafo, 'c', 'g', 6);
+    crearArista(grafo, 'd', 'k', 7);
+    crearArista(grafo, 'e', 'b', 5);
+    crearArista(grafo, 'e', 'f', 4);
+    crearArista(grafo, 'e', 'h', 7);
+    crearArista(grafo, 'f', 'g', 4);
+    crearArista(grafo, 'f', 'j', 3);
+    crearArista(grafo, 'g', 'd', 2);
+    crearArista(grafo, 'g', 'k', 3);
+    crearArista(grafo, 'g', 'j', 4);
+    crearArista(grafo, 'h', 'f', 5);
+    crearArista(grafo, 'h', 'i', 2);
+    crearArista(grafo, 'i', 'f', 4);
+    crearArista(grafo, 'i', 'j', 6);
+    crearArista(grafo, 'j', 'k', 2);
+    TablaD* tabla=algoritmoDijkstra(grafo, 0, 10);
+    int cantVertices=obtenerCantVertices(grafo);
+    for(int i=0; i<cantVertices; i++){
+        printf("Costo: %d Predecesor: %c\n", tabla->costos[i], tabla->predecesores[i]);
+    }
+    free(tabla->costos);
+    free(tabla->predecesores);
+    free(tabla);
     eliminarGrafo(grafo);
     return 0;
-}
-
-TablaD* algoritmoDijkstra(Grafo *grafo, int origen, int destino){
-    TablaD *tabla=(TablaD*)malloc(sizeof(TablaD));
-    int cantVertices=obtenerCantVertices(grafo), *visitados;
-    char predecesor='a';
-    for(int i=0; i<cantVertices; i++){
-        tabla->costos=obtenerCostoArista(grafo, origen, i);
-        tabla->predecesores=predecesor;
-    }
-    visitados=(int *)calloc(cantVertices, sizeof(int));
-    int i=origen;
-    while(i!=-1){
-        visitados[i]=1;
-        i=minimoNoVisitado(visitados, tabla, cantVertices);
-        if(i!=-1){
-
-        }
-    }
-    return TablaD;
-}
-
-
-int* obtenerAristasSalida(Grafo *grafo, int vertice){
-
-}
-
-int minimoNoVisitado(int visitados[], TablaD *tabla, int longitud){
-    int indice=-1, minimo=INFINITO;
-    for(int i=0; i<longitud; i++){
-        if(tabla->costos[i]<minimo&&!visitados[i]){
-            minimo=tabla->costos[i];
-            indice=i;
-        }
-    }
-    return indice;
 }

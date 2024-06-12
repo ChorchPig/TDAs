@@ -26,7 +26,10 @@ void eliminarMatriz(matrix* Matrix){
 
 int getMatrixRows(matrix* Matrix){ return Matrix->rows; }
 int getMatrixColumns(matrix* Matrix){ return Matrix->columns; }
-MATRIX_ELEMENT getValueInMatrix(matrix* Matrix, int row, int column){ return Matrix->datos[row][column]; }
+MATRIX_ELEMENT getValueInMatrix(matrix* Matrix, int row, int column){
+    int existe=((row>=0&&row<Matrix->rows)&&(column>=0&&column<Matrix->columns));
+    return (existe) ? Matrix->datos[row][column] : 9999;
+}
 
 void setValueInMatrix(matrix* Matrix, MATRIX_ELEMENT value, int fila, int columna){
     if(Matrix&&fila>=0&&fila<Matrix->rows&&columna>=0&&columna<Matrix->columns){
